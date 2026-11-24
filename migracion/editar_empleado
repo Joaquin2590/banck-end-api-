@@ -1,0 +1,12 @@
+def editar_empleado(request, id):
+    empleado = Empleado.objects.get(id=id)  # Buscar el registro a editar
+    form = forms.EmpleadoForm(instance=empleado)
+    if request.method == 'POST':
+        form = forms.EmpleadoForm(request.POST, instance=empleado)
+        if form.is_valid():
+            form.save()  # Aquí actualiza el registro en lugar de crear uno nuevo
+        return listar_empleados(request)
+    else:
+        data = {'form':form}
+        return render(request, 'modelApp/index.html', data)
+    

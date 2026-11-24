@@ -1,0 +1,4 @@
+def listar_empleados(request):
+    empleados = Empleado.objects.all()
+    data={'empleados':empleados}
+    return render(request,'modelApp/empleados.html',data)
