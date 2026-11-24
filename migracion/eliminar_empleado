@@ -1,0 +1,4 @@
+def eliminar_empleado(request,id):
+    empleado=Empleado.objects.get(id=id)
+    empleado.delete()
+    return redirect('trabajadores:empleados')
