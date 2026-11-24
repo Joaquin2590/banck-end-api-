@@ -14,11 +14,34 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR=os.path.join(BASE_DIR,'templates')
 
+# Cargar .env local
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(BASE_DIR,'.env'))
+except Exception:
+    pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
+# Usar PyMySQL
+if os.getenv("USE_PYMYSQL", "0") == "1":
+    import pymysql
+    pymysql.install_as_MySQLdb()
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("MYSQL_DATABASE"),
+        "USER": os.getenv("MYSQL_USER"),
+        "PASSWORD": os.getenv("MYSQL_PASSWORD"),
+        "HOST": os.getenv("MYSQL_HOST"),
+        "PORT": os.getenv("MYSQL_PORT", "3306"),
+        
+    }
+}
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-11cl7#=izhssnel(&+hi(jasdo#4!nrzv$96(5c%ipez9(wgel'
 
@@ -37,6 +60,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'modelApp',
 ]
 
 MIDDLEWARE = [
@@ -115,8 +141,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
